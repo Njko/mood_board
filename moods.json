@@ -885,7 +885,13 @@
     },
     "2026-08-12": {
       "value": "5",
-      "reason": "🌑"
+      "reason": "🌑",
+      "vacation": true
+    },
+    "2026-08-13": {
+      "value": "4",
+      "reason": "🏠",
+      "vacation": true
     }
   }
 }
