@@ -897,6 +897,16 @@
       "value": "1",
       "reason": "🏠",
       "vacation": true
+    },
+    "2026-08-15": {
+      "value": "3",
+      "reason": "🏠",
+      "vacation": true
+    },
+    "2026-08-16": {
+      "value": "3",
+      "reason": "🏠",
+      "vacation": true
     }
   }
 }
