@@ -907,6 +907,10 @@
       "value": "3",
       "reason": "🏠",
       "vacation": true
+    },
+    "2026-08-17": {
+      "value": "2",
+      "reason": "😡"
     }
   }
 }
