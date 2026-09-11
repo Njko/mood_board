@@ -22,9 +22,11 @@ python -m http.server 8000
 ## Architecture
 
 - **`index.html`** — Single-file app (~27KB) containing all HTML, CSS, and JavaScript. The JS defines a `NikoNiko` class that loads mood data, computes stats, and renders a 3-month calendar grid.
-- **`moods.json`** — Data store for mood entries. Keyed by `YYYY-MM-DD` with `value` (1-5), optional `reason` (emoji), and optional `vacation` (boolean).
+- **`moods/<année>.json`** — Data store for mood entries, one file per year (e.g. `moods/2026.json`). Each entry is keyed by `YYYY-MM-DD` with `value` (1-5), optional `reason` (emoji), and optional `vacation` (boolean). Entries are written one per line (compact JSON) to keep the file easy to scroll through by hand.
 
-**Data flow:** Page load → fetch `moods.json` → display today's mood + stats → render 3-month calendar with color-coded days.
+**Adding a new year:** create `moods/<année>.json` with `{"moods": {}}`; `index.html` picks it up automatically (it fetches every year from `START_YEAR` through the current year — no manifest to update).
+
+**Data flow:** Page load → fetch each `moods/<année>.json` from `START_YEAR` to the current year → merge → display today's mood + stats → render 3-month calendar with color-coded days.
 
 **Mood scale:** 1 (😢 Difficile) → 5 (😄 Excellent).
 

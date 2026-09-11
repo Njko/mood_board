@@ -971,6 +971,10 @@
 
         const DAY_NAMES = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
+        // Première année de données. Les fichiers moods/<année>.json sont
+        // chargés automatiquement de cette année jusqu'à l'année en cours.
+        const START_YEAR = 2026;
+
         const EMOJI_INTERPRETATIONS = {
             '🧑‍💻': ['Journée de code / dev perso', 'Travail technique stimulant', 'Session de programmation'],
             '👨‍💻': ['Journée de travail au bureau', 'Tâches professionnelles', 'Travail sur ordinateur'],
@@ -1012,7 +1016,40 @@
             '🤖': ['IA ou automatisation', 'Travail avec des machines', 'Expérimentation tech'],
             '🤕': ['Blessure ou douleur', 'Mal de tête', 'Journée physiquement difficile'],
             '💊': ['Prise de médicaments', 'Traitement médical', 'Suivi de santé'],
-            '👨‍👩‍👧‍👦': ['Journée en famille', 'Moment avec les proches', 'Activité familiale']
+            '👨‍👩‍👧‍👦': ['Journée en famille', 'Moment avec les proches', 'Activité familiale'],
+            '🏦': ['Démarche bancaire', 'Rendez-vous administratif', 'Gestion de finances'],
+            '😩': ['Épuisement ou lassitude', 'Journée pesante', 'Ras-le-bol'],
+            '🍟': ['Petit plaisir gourmand', 'Repas fast-food', 'Moment de détente culinaire'],
+            '📚': ['Lecture ou étude', 'Session d\'apprentissage', 'Journée studieuse'],
+            '📕': ['Lecture d\'un livre', 'Moment de lecture', 'Immersion dans une histoire'],
+            '🛴': ['Balade en trottinette', 'Déplacement ludique', 'Sortie en plein air'],
+            '🖨️': ['Tâche d\'impression', 'Démarche administrative', 'Paperasse'],
+            '🍔': ['Repas fast-food', 'Petit plaisir gourmand', 'Sortie restauration rapide'],
+            '♻️': ['Tri ou recyclage', 'Corvée ménagère', 'Rangement écoresponsable'],
+            '🧑‍⚕️': ['Rendez-vous médical', 'Suivi de santé', 'Visite chez un soignant'],
+            '🥵': ['Forte chaleur', 'Inconfort lié à la chaleur', 'Journée caniculaire'],
+            '🏭': ['Journée de travail intense', 'Environnement industriel', 'Contexte professionnel pesant'],
+            '👨‍🏫': ['Formation ou enseignement', 'Journée de transmission', 'Session pédagogique'],
+            '🍖': ['Repas copieux', 'Barbecue ou grillades', 'Plaisir culinaire'],
+            '🪫': ['Manque d\'énergie', 'Épuisement', 'Besoin de recharge'],
+            '👵': ['Visite à un proche âgé', 'Moment en famille', 'Journée avec une grand-mère'],
+            '😢': ['Tristesse marquée', 'Moment émotionnel fort', 'Chagrin'],
+            '🎬': ['Sortie cinéma', 'Soirée film', 'Moment de divertissement'],
+            '𝄞': ['Moment musical', 'Concert ou pratique musicale', 'Journée liée à la musique'],
+            '🧑‍🎤': ['Concert ou spectacle', 'Sortie musicale', 'Performance artistique'],
+            '🚅': ['Trajet en train', 'Voyage rapide', 'Déplacement longue distance'],
+            '🚙': ['Trajet en voiture', 'Route ou déplacement', 'Voyage routier'],
+            '🧳': ['Préparation de voyage', 'Bagages / départ', 'Organisation d\'un déplacement'],
+            '📁': ['Démarche administrative', 'Paperasse', 'Organisation de documents'],
+            '📞': ['Appel téléphonique', 'Échange à distance', 'Démarche par téléphone'],
+            '💒': ['Mariage', 'Cérémonie', 'Événement familial ou amical'],
+            '🏥': ['Visite à l\'hôpital', 'Rendez-vous médical', 'Suivi de santé'],
+            '💍': ['Fiançailles ou mariage', 'Événement marquant', 'Achat de bijou'],
+            '👨‍🍳': ['Cuisine ou repas préparé', 'Moment culinaire', 'Plaisir de cuisiner'],
+            '🤮': ['Nausée ou maladie', 'Malaise digestif', 'Journée de convalescence'],
+            '🌑': ['Nuit calme', 'Moment de repos nocturne', 'Obscurité ou tranquillité'],
+            '🥂': ['Célébration', 'Moment festif', 'Toast entre proches'],
+            '😞': ['Déception', 'Journée décevante', 'Contrariété']
         };
 
         class NikoNiko {
@@ -1038,13 +1075,20 @@
             }
 
             async loadMoods() {
+                const currentYear = new Date().getFullYear();
+                const years = [];
+                for (let year = START_YEAR; year <= currentYear; year++) years.push(year);
+
                 try {
-                    const response = await fetch('moods.json');
-                    if (!response.ok) {
-                        throw new Error('Impossible de charger les données');
+                    const results = await Promise.all(years.map(async year => {
+                        const response = await fetch(`moods/${year}.json`);
+                        return response.ok ? response.json() : null;
+                    }));
+
+                    this.moods = {};
+                    for (const data of results) {
+                        if (data) Object.assign(this.moods, data.moods);
                     }
-                    const data = await response.json();
-                    this.moods = data.moods || {};
                 } catch (error) {
                     console.error('Erreur lors du chargement:', error);
                     this.showError('Erreur lors du chargement des données');
