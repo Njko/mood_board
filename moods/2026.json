@@ -243,6 +243,8 @@
     "2026-09-09": {"value": "2", "reason": "👨‍💻"},
     "2026-09-10": {"value": "4", "reason": "🥂"},
     "2026-09-11": {"value": "2", "reason": "😞"},
-    "2026-09-12": {"value": "4", "reason": "🛍️", "vacation": true}
+    "2026-09-12": {"value": "4", "reason": "🛍️", "vacation": true},
+    "2026-09-13": {"value": "3", "reason": "🏠", "vacation": true},
+    "2026-09-14": {"value": "2", "reason": "😴", "vacation": true}
   }
 }
