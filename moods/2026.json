@@ -257,8 +257,8 @@
     "2026-09-23": {"value": "5", "reason": "🔧", "vacation": true},
     "2026-09-24": {"value": "4", "reason": "🏦", "vacation": true},
     "2026-09-25": {"value": "5", "reason": "🧪", "vacation": true},
-    "2026-09-26": {"value": "5", "reason": "🧪", "vacation": true},
-    "2026-09-27": {"value": "5", "reason": "🧪", "vacation": true},
+    "2026-09-26": {"value": "4", "reason": "🏠", "vacation": true},
+    "2026-09-27": {"value": "5", "reason": "🏍️", "vacation": true},
     "2026-09-28": {"value": "2", "reason": "📧"},
     "2026-09-29": {"value": "3", "reason": "👥"},
     "2026-09-30": {"value": "5", "reason": "🎂"},
@@ -272,6 +272,9 @@
     "2026-10-08": {"value": "4", "reason": "🍻"},
     "2026-10-09": {"value": "3", "reason": "👨‍💻"},
     "2026-10-10": {"value": "3", "reason": "📜"},
-    "2026-10-11": {"value": "4", "reason": "🎂"}
+    "2026-10-11": {"value": "4", "reason": "🎂"},
+    "2026-10-12": {"value": "3", "reason": "👨‍💻"},
+    "2026-10-13": {"value": "4", "reason": "👥"},
+    "2026-10-14": {"value": "3", "reason": "👨‍💻"}
   }
 }
