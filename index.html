@@ -471,6 +471,98 @@
             transition: height 0.4s ease-out;
         }
 
+        /* Mise en évidence d'une période record depuis les cartes */
+        .timeline-chart.hl .timeline-bar-group {
+            opacity: 0.25;
+            transition: opacity 0.2s;
+        }
+
+        .timeline-chart.hl .timeline-bar-group.hl-red,
+        .timeline-chart.hl .timeline-bar-group.hl-green {
+            opacity: 1;
+        }
+
+        .timeline-bar-group.hl-red .timeline-bar { background: #e74c3c; }
+        .timeline-bar-group.hl-green .timeline-bar { background: #27ae60; }
+
+        /* Cartes rouge / vert */
+        .streaks {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.9375rem;
+            margin-top: 1.5rem;
+        }
+
+        .streak-card {
+            --c: #e74c3c;
+            --c-bg: rgba(231, 76, 60, 0.08);
+            background: var(--c-bg);
+            border-left: 4px solid var(--c);
+            border-radius: 10px;
+            padding: 0.875rem 1rem;
+            text-align: left;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .streak-card.green {
+            --c: #27ae60;
+            --c-bg: rgba(39, 174, 96, 0.1);
+        }
+
+        .streak-card[data-start] {
+            cursor: pointer;
+        }
+
+        .streak-card[data-start]:hover,
+        .streak-card[data-start]:focus-visible {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            outline: none;
+        }
+
+        .streak-head {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .streak-emoji { font-size: 1.5rem; }
+
+        .streak-count {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--c);
+            line-height: 1;
+        }
+
+        .streak-label {
+            font-size: 0.85rem;
+            color: #444;
+            margin-top: 0.25rem;
+        }
+
+        .streak-best {
+            font-size: 0.85rem;
+            color: #444;
+            margin-top: 0.75rem;
+            padding-top: 0.625rem;
+            border-top: 1px dashed rgba(0, 0, 0, 0.15);
+        }
+
+        .streak-best strong { color: var(--c); }
+        .streak-best span { font-size: 0.8rem; color: #666; }
+
+        .streak-hint {
+            font-size: 0.7rem;
+            color: var(--c);
+            margin-top: 0.375rem;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 480px) {
+            .streaks { grid-template-columns: 1fr; }
+        }
+
         .timeline-day-labels {
             display: flex;
             gap: 2px;
@@ -1236,7 +1328,8 @@
                     const avg = slice.reduce((s, v) => s + v.value, 0) / slice.length;
                     return {
                         x: entries.length === 1 ? 50 : (i / (entries.length - 1)) * 100,
-                        y: (1 - avg / 5) * 100
+                        y: (1 - avg / 5) * 100,
+                        avg
                     };
                 });
 
@@ -1258,6 +1351,35 @@
                 // Aire fermée : courbe → ligne y=40 (niveau 3)
                 const midY = 40; // (1 - 3/5) * 100
                 const areaPath = `${trendPath} L ${points[points.length - 1].x},${midY} L ${points[0].x},${midY} Z`;
+
+                // Rouge / vert = courbe de tendance sous / au-dessus du niveau 3 (comme les zones du graphique)
+                const streakStats = (test) => {
+                    let count = 0, best = { len: 0 }, cur = 0;
+                    points.forEach((p, i) => {
+                        if (!test(p.avg)) { cur = 0; return; }
+                        count++;
+                        cur++;
+                        if (cur > best.len) best = { len: cur, startIdx: i - cur + 1, endIdx: i };
+                    });
+                    const when = best.len === 0 ? ''
+                        : best.len === 1 ? `le ${this.formatDateShort(entries[best.startIdx].date)}`
+                        : `du ${this.formatDateShort(entries[best.startIdx].date)} au ${this.formatDateShort(entries[best.endIdx].date)}`;
+                    return { count, len: best.len, when, startIdx: best.startIdx, endIdx: best.endIdx };
+                };
+                const red = streakStats(v => v < 3);
+                const green = streakStats(v => v > 3);
+                const streakHTML = (cls, emoji, label, s) => {
+                    const best = s.len === 0
+                        ? `<div class="streak-best">Aucune période pour l'instant</div>`
+                        : `<div class="streak-best">🔥 Record : <strong>${s.len} ${s.len > 1 ? 'jours' : 'jour'}</strong> d'affilée<br><span>${s.when}</span></div>
+                           <div class="streak-hint">Voir sur le graphique ↑</div>`;
+                    return `
+                    <div class="streak-card ${cls}" ${s.len ? `tabindex="0" role="button" data-start="${s.startIdx}" data-end="${s.endIdx}" aria-label="Afficher la plus longue période dans le ${label} sur le graphique"` : ''}>
+                        <div class="streak-head"><span class="streak-emoji">${emoji}</span><span class="streak-count">${s.count}</span></div>
+                        <div class="streak-label">${s.count > 1 ? 'jours' : 'jour'} dans le ${label}</div>
+                        ${best}
+                    </div>`;
+                };
 
                 container.innerHTML = `
                     <div class="timeline-toggle">
@@ -1300,9 +1422,42 @@
                             </div>
                         </div>
                     </div>
+                    <div class="streaks">
+                        ${streakHTML('red', MOOD_CONFIG[1].emoji, 'rouge', red)}
+                        ${streakHTML('green', MOOD_CONFIG[5].emoji, 'vert', green)}
+                    </div>
                 `;
 
                 card.style.display = '';
+
+                // Survol / clic d'une carte : met la période record en évidence sur le graphique
+                const chartEl = document.getElementById('timeline-chart');
+                const groups = chartEl.querySelectorAll('.timeline-bar-group');
+                container.querySelectorAll('.streak-card[data-start]').forEach(el => {
+                    const start = +el.dataset.start, end = +el.dataset.end;
+                    const cls = el.classList.contains('red') ? 'hl-red' : 'hl-green';
+                    const on = () => {
+                        chartEl.classList.add('hl');
+                        groups.forEach((g, i) => g.classList.toggle(cls, i >= start && i <= end));
+                    };
+                    const off = () => {
+                        chartEl.classList.remove('hl');
+                        groups.forEach(g => g.classList.remove('hl-red', 'hl-green'));
+                    };
+                    el.addEventListener('mouseenter', on);
+                    el.addEventListener('mouseleave', off);
+                    el.addEventListener('focus', on);
+                    el.addEventListener('blur', off);
+                    const show = () => {
+                        on();
+                        const inner = document.getElementById('timeline-chart-inner');
+                        const mid = (groups[start].offsetLeft + groups[end].offsetLeft) / 2;
+                        inner.scrollTo({ left: mid - inner.clientWidth / 2, behavior: 'smooth' });
+                        chartEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    };
+                    el.addEventListener('click', show);
+                    el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(); } });
+                });
 
                 // Post-render: séparateurs de mois, scroll sync, auto-scroll
                 requestAnimationFrame(() => {
