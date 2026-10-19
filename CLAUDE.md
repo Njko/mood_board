@@ -28,6 +28,10 @@ python -m http.server 8000
 
 **Data flow:** Page load → fetch each `moods/<année>.json` from `START_YEAR` to the current year → merge → display today's mood + stats → render 3-month calendar with color-coded days.
 
+**Timeline stats** (`displayTimeline()`): sous le graphique d'évolution, deux cartes « rouge » / « vert » donnent le nombre de jours et la plus longue période. Rouge/vert se définissent comme sur le graphique : la moyenne mobile sur 7 jours (la courbe de tendance) sous / au-dessus du niveau 3, et non la note brute du jour. Le survol d'une carte met la période record en évidence sur le graphique.
+
+**Baromètre** (`displayForecast()`): cadran SVG qui indique la tendance des 3 prochains jours (aujourd'hui, ou demain si déjà saisi). Prévision par jour = moyenne historique du jour de la semaine + écart de forme des 7 derniers jours, qui s'estompe de 40 % par jour de distance (fonctionne même si des jours sont oubliés). L'aiguille montre l'écart entre cette prévision et la forme récente (±1 point = ±75°, seuil « stable » à ±0,25). C'est volontairement une métaphore : sur ces données, aucun modèle ne bat vraiment la moyenne (erreur ~0,95 point), on lit une direction, pas une valeur. Masqué sous 28 jours de données.
+
 **Mood scale:** 1 (😢 Difficile) → 5 (😄 Excellent).
 
 ## Content Language
