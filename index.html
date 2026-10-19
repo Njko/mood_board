@@ -473,29 +473,26 @@
 
         /* Baromètre de l'humeur */
         .forecast-trend {
-            --c: #95a5a6;
+            --c: #e67e22;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 0.25rem;
             padding: 1.25rem 1rem;
             border-radius: 14px;
-            background: color-mix(in srgb, var(--c) 12%, transparent);
-            border: 2px solid color-mix(in srgb, var(--c) 35%, transparent);
+            background: #fff;
+            border: 2px solid #f0f0f0;
             text-align: center;
         }
-
-        .forecast-trend.up { --c: #27ae60; }
-        .forecast-trend.down { --c: #e74c3c; }
 
         .forecast-dial {
             width: 100%;
             max-width: 320px;
         }
 
-        .dial-arc { fill: none; stroke-width: 12; opacity: 0.85; }
+        .dial-arc { fill: none; stroke-width: 16; }
         .dial-down { stroke: #e74c3c; }
-        .dial-flat { stroke: #bdc3c7; }
+        .dial-flat { stroke: #e67e22; }
         .dial-up { stroke: #27ae60; }
         .dial-ticks line { stroke: #7f8c8d; stroke-width: 1; }
         .forecast-dial text { font-size: 14px; }
@@ -512,12 +509,12 @@
             stroke-linecap: round;
         }
 
-        .dial-hub { fill: #34495e; }
+        .dial-hub { fill: #2c3e50; }
 
         .forecast-trend-label {
             font-size: 1.25rem;
             font-weight: bold;
-            color: var(--c);
+            color: #2c3e50;
         }
 
         .forecast-trend-sub {
@@ -1349,7 +1346,7 @@
 
                 // Baromètre : prévision moyenne vs forme des 7 derniers jours
                 const delta = mean(scores) - (globalMean + recentGap);
-                const [trend, cls] = delta > 0.25 ? ['en amélioration', 'up'] : delta < -0.25 ? ['en baisse', 'down'] : ['stable', ''];
+                const trend = delta > 0.25 ? 'en amélioration' : delta < -0.25 ? 'en baisse' : 'stable';
                 // Aiguille : ±1 point d'écart = ±75° (butée au-delà)
                 const angle = Math.max(-1, Math.min(1, delta)) * 75;
                 const ticks = Array.from({ length: 13 }, (_, k) => {
@@ -1358,7 +1355,7 @@
                 }).join('');
 
                 document.getElementById('forecast-container').innerHTML = `
-                    <div class="forecast-trend ${cls}" role="img" aria-label="Tendance ${trend} sur les 3 prochains jours">
+                    <div class="forecast-trend" role="img" aria-label="Tendance ${trend} sur les 3 prochains jours">
                         <svg class="forecast-dial" viewBox="0 -8 200 132" aria-hidden="true">
                             <path d="M 20 100 A 80 80 0 0 1 60 30.72" class="dial-arc dial-down"/>
                             <path d="M 60 30.72 A 80 80 0 0 1 140 30.72" class="dial-arc dial-flat"/>
