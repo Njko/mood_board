@@ -491,9 +491,6 @@
         }
 
         .dial-arc { fill: none; stroke-width: 16; }
-        .dial-down { stroke: #e74c3c; }
-        .dial-flat { stroke: #e67e22; }
-        .dial-up { stroke: #27ae60; }
         .dial-ticks line { stroke: #7f8c8d; stroke-width: 1; }
         .forecast-dial text { font-size: 14px; }
 
@@ -1357,9 +1354,16 @@
                 document.getElementById('forecast-container').innerHTML = `
                     <div class="forecast-trend" role="img" aria-label="Tendance ${trend} sur les 3 prochains jours">
                         <svg class="forecast-dial" viewBox="0 -8 200 132" aria-hidden="true">
-                            <path d="M 20 100 A 80 80 0 0 1 60 30.72" class="dial-arc dial-down"/>
-                            <path d="M 60 30.72 A 80 80 0 0 1 140 30.72" class="dial-arc dial-flat"/>
-                            <path d="M 140 30.72 A 80 80 0 0 1 180 100" class="dial-arc dial-up"/>
+                            <defs>
+                                <linearGradient id="dial-grad-left" gradientUnits="userSpaceOnUse" x1="20" y1="0" x2="100" y2="0">
+                                    <stop offset="0" stop-color="#e74c3c"/><stop offset="1" stop-color="#e67e22"/>
+                                </linearGradient>
+                                <linearGradient id="dial-grad-right" gradientUnits="userSpaceOnUse" x1="100" y1="0" x2="180" y2="0">
+                                    <stop offset="0" stop-color="#e67e22"/><stop offset="0.5" stop-color="#e67e22"/><stop offset="1" stop-color="#27ae60"/>
+                                </linearGradient>
+                            </defs>
+                            <path d="M 20 100 A 80 80 0 0 1 100 20" class="dial-arc" stroke="url(#dial-grad-left)"/>
+                            <path d="M 100 20 A 80 80 0 0 1 180 100" class="dial-arc" stroke="url(#dial-grad-right)"/>
                             <g class="dial-ticks">${ticks}</g>
                             <g class="dial-needle" id="forecast-needle"><line x1="100" y1="100" x2="100" y2="34"/></g>
                             <circle cx="100" cy="100" r="6" class="dial-hub"/>
