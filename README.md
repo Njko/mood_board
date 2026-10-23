@@ -14,12 +14,11 @@ Cette application affiche votre humeur du jour en lisant les fichiers `moods/<an
 
 - 🎭 Grande visualisation de l'humeur du jour avec l'emoji d'humeur et de raison (et son interprétation)
 - 📊 Statistiques simples (nombre de jours, moyenne)
-- 🌸 Mon Ikigai : le ressenti du moment sur les quatre cercles de l'Ikigai (voir plus bas)
 - 📈 Évolution de l'humeur : graphique jour par jour avec courbe de tendance (moyenne mobile sur 7 jours), week-ends et vacances distingués
 - 🔴🟢 Jours dans le rouge / le vert et leur plus longue période : la tendance passe sous / au-dessus du niveau 3. Survolez une carte pour voir la période sur le graphique
 - 🧭 Baromètre de l'humeur : un cadran dont l'aiguille indique la tendance des 3 prochains jours (voir plus bas)
 - 📅 Calendrier des derniers mois pour voir les tendances en un coup d'œil
-- ❓ Aide repliée en bas de page, avec les 16 cas possibles de l'Ikigai
+- 🌸 Mon Ikigai : le ressenti du moment sur les quatre cercles de l'Ikigai (voir plus bas), avec une aide qui détaille les 16 cas possibles
 - 🎨 Design épuré et animé
 
 ### Baromètre de l'humeur
@@ -37,7 +36,7 @@ Contrairement aux autres indicateurs, l'Ikigai n'a pas d'historique : il donne l
 - 🌍 C'est utile au monde (`besoin`)
 - 💰 Je suis payé correctement (`paye`)
 
-Les cercles à « oui » se colorent sur le diagramme et un point indique la zone où ils se croisent : Passion, Mission, Vocation, Profession, Ikigai… Les 16 combinaisons sont expliquées dans la section d'aide de la page.
+Les cercles à « oui » se colorent sur le diagramme et un point indique la zone où ils se croisent : Passion, Mission, Vocation, Profession, Ikigai… Les 16 combinaisons sont expliquées dans l'aide, accessible par le lien « Comment lire ce schéma ? » sous le diagramme.
 
 Pour le mettre à jour, réécrivez `ikigai.json` à la racine et commitez avec les emoji des cercles à « oui » :
 
