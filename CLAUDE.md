@@ -22,6 +22,7 @@ python -m http.server 8000
 ## Architecture
 
 - **`index.html`** — Single-file app (~27KB) containing all HTML, CSS, and JavaScript. The JS defines a `NikoNiko` class that loads mood data, computes stats, and renders a 3-month calendar grid.
+- **`ikigai.json`** — Current Ikigai, e.g. `{"aime": true, "doue": true, "besoin": false, "paye": true}`. No history: the file is simply overwritten (git keeps past versions).
 - **`moods/<année>.json`** — Data store for mood entries, one file per year (e.g. `moods/2026.json`). Each entry is keyed by `YYYY-MM-DD` with `value` (1-5), optional `reason` (emoji), and optional `vacation` (boolean). Entries are written one per line (compact JSON) to keep the file easy to scroll through by hand.
 
 **Adding a new year:** create `moods/<année>.json` with `{"moods": {}}`; `index.html` picks it up automatically (it fetches every year from `START_YEAR` through the current year — no manifest to update).
@@ -32,6 +33,8 @@ python -m http.server 8000
 
 **Baromètre** (`displayForecast()`): cadran SVG qui indique la tendance des 3 prochains jours (aujourd'hui, ou demain si déjà saisi). Prévision par jour = moyenne historique du jour de la semaine + écart de forme des 7 derniers jours, qui s'estompe de 40 % par jour de distance (fonctionne même si des jours sont oubliés). L'aiguille montre l'écart entre cette prévision et la forme récente (±1 point = ±75°, seuil « stable » à ±0,25). C'est volontairement une métaphore : sur ces données, aucun modèle ne bat vraiment la moyenne (erreur ~0,95 point), on lit une direction, pas une valeur. Masqué sous 28 jours de données.
 
+**Ikigai** (`displayIkigai()`): carte « 🌸 Mon Ikigai » sous l'humeur du jour, sans notion de temps : juste le ressenti du moment. Lue depuis `ikigai.json` à la racine, quatre booléens `aime`, `doue`, `besoin`, `paye` (une réponse oui / non par cercle). Chaque combinaison correspond à une zone de `IKIGAI_ZONES` (Passion, Mission, Vocation, Profession, Ikigai…), affichée sur un diagramme de Venn SVG : cercles à oui colorés, cercles à non en pointillé, un point sur la zone. Carte masquée si le fichier est absent. Les 16 cas possibles ne sont montrés que dans la section « ❓ Aide » repliée en bas de page (`displayHelp()`).
+
 **Mood scale:** 1 (😢 Difficile) → 5 (😄 Excellent).
 
 ## Content Language
@@ -41,3 +44,5 @@ The app UI and README are written in **French**.
 ## Git Commit Convention
 
 Mood entry commits follow the pattern: `🎭 Humeur du JJ/MM : [emoji]`
+
+Ikigai commits list the emoji of the circles answered yes: `🌸 Ikigai : ❤️💪💰` (`—` when none).
