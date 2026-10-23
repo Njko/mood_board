@@ -1183,6 +1183,118 @@
                 min-width: 8px;
             }
         }
+
+        /* Ordre des cartes sur mobile : les colonnes sont transparentes */
+        #main-content { display: flex; flex-direction: column; }
+        .col { display: contents; }
+        .card-today { order: 1; }
+        #timeline-card { order: 2; }
+        #forecast-card { order: 3; }
+        #history-card { order: 4; }
+        #ikigai-card { order: 5; }
+
+        /* Ordinateur : deux colonnes, le moment présent à gauche, l'historique à droite */
+        @media (min-width: 1100px) {
+            body {
+                padding: 2rem 2rem;
+            }
+
+            .container {
+                max-width: 1440px;
+            }
+
+            #main-content {
+                display: grid;
+                grid-template-columns: minmax(340px, 400px) minmax(0, 1fr);
+                gap: 1.5rem;
+                align-items: start;
+            }
+
+            .col {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+                min-width: 0;
+            }
+
+            .col .card {
+                margin-bottom: 0;
+                padding: 1.75rem;
+            }
+
+            .title {
+                margin-bottom: 0.75rem;
+            }
+
+            .date {
+                margin-bottom: 1rem;
+            }
+
+            .mood-display {
+                margin: 1rem 0;
+            }
+
+            .mood-emoji {
+                font-size: 6rem;
+            }
+
+            .stats-mini {
+                margin-top: 1.5rem;
+                padding-top: 1.25rem;
+            }
+
+            .history-title {
+                margin-bottom: 1.25rem;
+            }
+
+            .timeline-chart-inner {
+                height: 17rem;
+            }
+
+            .forecast-dial {
+                max-width: 260px;
+            }
+
+            .ikigai-svg {
+                max-width: 200px;
+            }
+
+            .calendar-mood-emoji {
+                font-size: 1.6rem;
+            }
+
+            #history-card {
+                container-type: inline-size;
+            }
+
+            /* Mois empilés (largeur intermédiaire) : on limite leur taille */
+            #calendar-container .calendar-section {
+                max-width: 30rem;
+                margin-inline: auto;
+            }
+
+            /* Les deux mois côte à côte, dans l'ordre chronologique, quand la carte est assez large */
+            @container (min-width: 840px) {
+                #calendar-container {
+                    display: flex;
+                    flex-direction: row-reverse;
+                    gap: 2rem;
+                }
+
+                #calendar-container .calendar-section {
+                    flex: 1;
+                    min-width: 0;
+                    max-width: none;
+                    margin-bottom: 0;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                #calendar-container .month-average {
+                    margin-top: auto;
+                }
+            }
+        }
     </style>
 </head>
 <body>
@@ -1191,39 +1303,44 @@
     <div class="container">
         <!-- Carte humeur du jour -->
         <main id="main-content">
-            <section class="card" aria-labelledby="today-title">
-                <h1 class="title" id="today-title">📊 Mon Niko Niko</h1>
-                <time class="date" id="today-date" datetime=""></time>
+            <!-- Sur ordinateur : le moment présent à gauche, l'historique à droite.
+                 Sur mobile, les colonnes s'effacent et les cartes reprennent l'ordre défini par `order`. -->
+            <div class="col col-now">
+                <section class="card card-today" aria-labelledby="today-title">
+                    <h1 class="title" id="today-title">📊 Mon Niko Niko</h1>
+                    <time class="date" id="today-date" datetime=""></time>
 
-                <div id="content" role="status" aria-live="polite" aria-atomic="true">
-                    <div class="loading" role="alert">Chargement...</div>
-                </div>
-            </section>
+                    <div id="content" role="status" aria-live="polite" aria-atomic="true">
+                        <div class="loading" role="alert">Chargement...</div>
+                    </div>
+                </section>
 
-            <!-- Carte timeline des variations -->
-            <section class="card" id="timeline-card" style="display: none;" aria-labelledby="timeline-title">
-                <h2 class="history-title" id="timeline-title">📈 Évolution de l'humeur</h2>
-                <div id="timeline-container"></div>
-            </section>
+                <!-- Carte baromètre de l'humeur -->
+                <section class="card" id="forecast-card" style="display: none;" aria-labelledby="forecast-title">
+                    <h2 class="history-title" id="forecast-title">🌦️ Baromètre de l'humeur</h2>
+                    <div id="forecast-container"></div>
+                </section>
 
-            <!-- Carte baromètre de l'humeur -->
-            <section class="card" id="forecast-card" style="display: none;" aria-labelledby="forecast-title">
-                <h2 class="history-title" id="forecast-title">🌦️ Baromètre de l'humeur</h2>
-                <div id="forecast-container"></div>
-            </section>
+                <!-- Carte Ikigai (ressenti du moment, sans historique) -->
+                <section class="card" id="ikigai-card" style="display: none;" aria-labelledby="ikigai-title">
+                    <h2 class="history-title" id="ikigai-title">🌸 Mon Ikigai</h2>
+                    <div id="ikigai-container"></div>
+                </section>
+            </div>
 
-            <!-- Carte historique -->
-            <section class="card" id="history-card" style="display: none;" aria-labelledby="history-title">
-                <h2 class="history-title" id="history-title">📅 Historique des 2 derniers mois</h2>
-                <div id="calendar-container" role="region" aria-label="Calendrier des humeurs"></div>
-            </section>
+            <div class="col col-history">
+                <!-- Carte timeline des variations -->
+                <section class="card" id="timeline-card" style="display: none;" aria-labelledby="timeline-title">
+                    <h2 class="history-title" id="timeline-title">📈 Évolution de l'humeur</h2>
+                    <div id="timeline-container"></div>
+                </section>
 
-
-            <!-- Carte Ikigai (ressenti du moment, sans historique) -->
-            <section class="card" id="ikigai-card" style="display: none;" aria-labelledby="ikigai-title">
-                <h2 class="history-title" id="ikigai-title">🌸 Mon Ikigai</h2>
-                <div id="ikigai-container"></div>
-            </section>
+                <!-- Carte historique -->
+                <section class="card" id="history-card" style="display: none;" aria-labelledby="history-title">
+                    <h2 class="history-title" id="history-title">📅 Historique des 2 derniers mois</h2>
+                    <div id="calendar-container" role="region" aria-label="Calendrier des humeurs"></div>
+                </section>
+            </div>
         </main>
     </div>
 

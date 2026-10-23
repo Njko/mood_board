@@ -35,6 +35,8 @@ python -m http.server 8000
 
 **Ikigai** (`displayIkigai()`): carte « 🌸 Mon Ikigai » sous le calendrier, sans notion de temps : juste le ressenti du moment. Lue depuis `ikigai.json` à la racine, quatre booléens `aime`, `doue`, `besoin`, `paye` (une réponse oui / non par cercle). Chaque combinaison correspond à une zone de `IKIGAI_ZONES` (Passion, Mission, Vocation, Profession, Ikigai…), affichée sur un diagramme de Venn SVG : cercles à oui colorés, cercles à non en pointillé, un point sur la zone. Carte masquée si le fichier est absent. Les 16 cas possibles ne sont montrés que dans la modale « ❓ Aide », ouverte par le lien « Comment lire ce schéma ? » de la carte (`displayHelp()`, `openHelp()`).
 
+**Mise en page ordinateur** (≥ 1100 px) : deux colonnes, `.col-now` (humeur du jour, baromètre, Ikigai) à gauche et `.col-history` (évolution, calendrier) à droite. Sur mobile, les colonnes sont en `display: contents` et l'ordre des cartes vient de `order`. Les deux mois du calendrier passent côte à côte via une requête de conteneur quand la carte fait au moins 840 px.
+
 **Mood scale:** 1 (😢 Difficile) → 5 (😄 Excellent).
 
 ## Content Language

@@ -23,6 +23,8 @@ Déploiement automatique via GitHub Pages au push sur `master`.
 - **`ikigai.json`** : Ikigai du moment, sans historique. Quatre booléens `aime`, `doue`, `besoin`, `paye`. Le fichier est simplement réécrit à chaque mise à jour.
 - **`EMOJI_INTERPRETATIONS`** (dans `index.html`) : explications des emoji de raison. Tout nouvel emoji de raison utilisé dans les données doit y être ajouté.
 
+Mise en page : sur ordinateur (≥ 1100 px), deux colonnes `.col-now` (moment présent) et `.col-history` (historique). Sur mobile, l'ordre des cartes est fixé par `order` en CSS : en ajoutant une carte, lui donner sa place dans les deux.
+
 Échelle d'humeur : 1 (😢 Difficile) → 5 (😄 Excellent).
 
 ## Règles de calcul à respecter
