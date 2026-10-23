@@ -18,8 +18,9 @@ Déploiement automatique via GitHub Pages au push sur `master`.
 
 ## Architecture
 
-- **`index.html`** : classe `NikoNiko` qui charge les humeurs, calcule les stats et affiche : l'humeur du jour, l'évolution (graphique, stats rouge/vert), le baromètre, le calendrier.
+- **`index.html`** : classe `NikoNiko` qui charge les humeurs, calcule les stats et affiche : l'humeur du jour, l'Ikigai, l'évolution (graphique, stats rouge/vert), le baromètre, le calendrier.
 - **`moods/<année>.json`** : données, une entrée par jour `YYYY-MM-DD` avec `value` (1-5), `reason` (emoji, optionnel) et `vacation` (booléen, optionnel). Une entrée par ligne (JSON compact). Pour une nouvelle année, créer `moods/<année>.json` avec `{"moods": {}}` : la page charge toutes les années de `START_YEAR` à l'année en cours.
+- **`ikigai.json`** : Ikigai du moment, sans historique. Quatre booléens `aime`, `doue`, `besoin`, `paye`. Le fichier est simplement réécrit à chaque mise à jour.
 - **`EMOJI_INTERPRETATIONS`** (dans `index.html`) : explications des emoji de raison. Tout nouvel emoji de raison utilisé dans les données doit y être ajouté.
 
 Échelle d'humeur : 1 (😢 Difficile) → 5 (😄 Excellent).
@@ -33,3 +34,5 @@ Déploiement automatique via GitHub Pages au push sur `master`.
 
 - Interface et README en **français**, avec les accents.
 - Commits d'humeur : `🎭 Humeur du JJ/MM : [emoji]`.
+- Commits d'Ikigai : `🌸 Ikigai : ❤️💪💰` (emoji des cercles à oui, `—` si aucun).
+- Les 16 cas de l'Ikigai restent dans la section « ❓ Aide » repliée, pas sur la page principale.

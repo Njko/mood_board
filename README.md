@@ -14,10 +14,12 @@ Cette application affiche votre humeur du jour en lisant les fichiers `moods/<an
 
 - 🎭 Grande visualisation de l'humeur du jour avec l'emoji d'humeur et de raison (et son interprétation)
 - 📊 Statistiques simples (nombre de jours, moyenne)
+- 🌸 Mon Ikigai : le ressenti du moment sur les quatre cercles de l'Ikigai (voir plus bas)
 - 📈 Évolution de l'humeur : graphique jour par jour avec courbe de tendance (moyenne mobile sur 7 jours), week-ends et vacances distingués
 - 🔴🟢 Jours dans le rouge / le vert et leur plus longue période : la tendance passe sous / au-dessus du niveau 3. Survolez une carte pour voir la période sur le graphique
 - 🧭 Baromètre de l'humeur : un cadran dont l'aiguille indique la tendance des 3 prochains jours (voir plus bas)
 - 📅 Calendrier des derniers mois pour voir les tendances en un coup d'œil
+- ❓ Aide repliée en bas de page, avec les 16 cas possibles de l'Ikigai
 - 🎨 Design épuré et animé
 
 ### Baromètre de l'humeur
@@ -25,6 +27,28 @@ Cette application affiche votre humeur du jour en lisant les fichiers `moods/<an
 Une prévision sur le modèle de la météo : imprécise, mais qui s'appuie sur ce qui s'est déjà produit. Pour chacun des 3 prochains jours (à partir d'aujourd'hui, ou de demain si l'humeur du jour est déjà saisie), on prend la moyenne historique de ce jour de la semaine, corrigée de l'écart de forme des 7 derniers jours. Cet écart s'estompe de 40 % par jour de distance, donc oublier de saisir quelques jours ne bloque pas la prévision.
 
 L'aiguille compare cette prévision à votre forme récente : à gauche une baisse, au centre stable, à droite une amélioration (seuil « stable » à ±0,25 point). On lit une direction, pas une valeur précise. Le baromètre n'apparaît qu'à partir de 28 jours de données.
+
+### Mon Ikigai
+
+Contrairement aux autres indicateurs, l'Ikigai n'a pas d'historique : il donne le ressenti du moment. Il répond à quatre questions par oui ou par non :
+
+- ❤️ J'aime ce que je fais (`aime`)
+- 💪 Je me sens doué pour ça (`doue`)
+- 🌍 C'est utile au monde (`besoin`)
+- 💰 Je suis payé correctement (`paye`)
+
+Les cercles à « oui » se colorent sur le diagramme et un point indique la zone où ils se croisent : Passion, Mission, Vocation, Profession, Ikigai… Les 16 combinaisons sont expliquées dans la section d'aide de la page.
+
+Pour le mettre à jour, réécrivez `ikigai.json` à la racine et commitez avec les emoji des cercles à « oui » :
+
+```bash
+echo '{"aime": true, "doue": true, "besoin": false, "paye": true}' > ikigai.json
+git add ikigai.json
+git commit -m "🌸 Ikigai : ❤️💪💰"
+git push
+```
+
+Sans fichier `ikigai.json`, la carte n'est pas affichée.
 
 ### Mise à jour des humeurs
 
@@ -113,7 +137,7 @@ Application web simple utilisant :
 - **HTML5** : Structure de la page
 - **CSS3** : Design moderne avec animations
 - **JavaScript vanilla** : Chargement, statistiques, graphique et baromètre (SVG)
-- **Fetch API** : Lecture des fichiers moods/<année>.json
+- **Fetch API** : Lecture des fichiers moods/<année>.json et ikigai.json
 
 Pas de backend, pas de configuration compliquée - juste un fichier JSON et du HTML/CSS/JS pur !
 
