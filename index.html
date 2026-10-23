@@ -604,16 +604,6 @@
 
         .help-body ul { padding-left: 1.25rem; }
 
-        .help-body pre {
-            background: #2c3e50;
-            color: #ecf0f1;
-            border-radius: 6px;
-            padding: 0.5rem 0.75rem;
-            font-size: 0.8rem;
-            overflow-x: auto;
-            margin: 0.5rem 0;
-        }
-
         .ikigai-cases {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1582,11 +1572,6 @@
                     <p>L'Ikigai donne le ressenti du moment, sans historique. Il répond à quatre questions par oui ou par non :</p>
                     <ul>${IKIGAI_DIMS.map(d => `<li>${d.emoji} ${d.question}</li>`).join('')}</ul>
                     <p>Un « oui » colore le cercle, un « non » le laisse en pointillé. Le point indique la zone où se croisent les cercles à « oui ».</p>
-
-                    <h3>Mettre à jour</h3>
-                    <p>Modifier <code>ikigai.json</code> puis commiter avec les emoji des cercles à « oui » :</p>
-                    <pre>{"aime": true, "doue": true, "besoin": false, "paye": true}</pre>
-                    <pre>🌸 Ikigai : ❤️💪💰</pre>
 
                     <h3>Les 16 cas possibles</h3>
                     <div class="ikigai-cases">${cases}</div>
