@@ -1717,7 +1717,10 @@
                 }
 
                 // Baromètre : prévision moyenne vs forme des 7 derniers jours
-                const delta = mean(scores) - (globalMean + recentGap);
+                let delta = mean(scores) - (globalMean + recentGap);
+                // Rebond surestimé : le retour vers la moyenne globale est ~2x trop optimiste (backtest : +0,75 prédit pour +0,40 observé)
+                // alors que les baisses sont bien calibrées. On amortit donc seulement les hausses.
+                if (delta > 0) delta *= 0.55; // ponytail: coefficient mesuré sur ~300 jours, à revoir si les données changent
                 const trend = delta > 0.25 ? 'en amélioration' : delta < -0.25 ? 'en baisse' : 'stable';
                 // Aiguille : ±1 point d'écart = ±75° (butée au-delà)
                 const angle = Math.max(-1, Math.min(1, delta)) * 75;
